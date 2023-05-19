@@ -4,13 +4,11 @@ const Post = require('./models/post');
 
 require('dotenv').config();
 
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbCluster = process.env.DB_CLUSTER;
-const dbName = process.env.DB_NAME;
-const mongoDBUrl = `mongodb+srv://${dbUser}:${dbPassword}@${dbCluster}/${dbName}?retryWrites=true&w=majority`;
 
-mongoose.connect(mongoDBUrl, {
+const MONGODB_URI = process.env.MONGODB_URI;
+
+
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });

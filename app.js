@@ -3,19 +3,24 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 // Construct the MongoDB connection URL
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbCluster = process.env.DB_CLUSTER;
-const dbName = process.env.DB_NAME;
-const mongoDBUrl = `mongodb+srv://${dbUser}:${dbPassword}@${dbCluster}/${dbName}?retryWrites=true&w=majority`;
+require('dotenv').config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
 
 
 const app = express();
+const router = express.Router();
+
 
 const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
 
 require('dotenv').config();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 
 app.use(express.json());
 
@@ -24,7 +29,7 @@ mongodb+srv://<username>:<password>@cluster0.zqqzm6c.mongodb.net/?retryWrites=tr
 */
 
 
-mongoose.connect(mongoDBUrl, {
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -35,12 +40,12 @@ mongoose.connect(mongoDBUrl, {
     console.error('Error connecting to MongoDB:', error);
   });
 
+  
+  app.use(express.static('public'));
 
 // Register the routes
 app.use('/posts', postsRouter);
-app.use('/users', usersRouter);
-
-
+//app.use('/users', usersRouter);
 
 app.get('/posts', (req, res) => {
     // Code to handle the request and send a response
